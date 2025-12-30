@@ -1,0 +1,34 @@
+# Java/Maven
+target/
+*.jar
+*.war
+*.ear
+*.log
+.settings/
+.classpath
+.project
+
+# IDE
+.idea/
+*.iml
+*.iws
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (in case it's used for frontend tooling later)
+/node_modules
+/dist
+/build
+/out
+.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local

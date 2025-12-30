@@ -1,0 +1,5 @@
+{
+  "name": "AnimalX Gym Manager",
+  "description": "An application to manage gym members from an Excel file, track payments, and send communications like birthday greetings and payment reminders.",
+  "requestFramePermissions": []
+}
