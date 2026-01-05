@@ -1,67 +1,93 @@
-# AnimalX Gym Manager
+# AnimalX Gym Manager – Backend
 
-Esta aplicación es una herramienta de gestión para el gimnasio AnimalX, diseñada para facilitar la administración de miembros, el seguimiento de pagos y el envío de comunicaciones personalizadas. La arquitectura es un sistema cliente-servidor con un frontend en **React** y un backend en **Java 17 con Spring Boot**.
+## 🏗️ Arquitectura y Diseño
 
-## ✨ Arquitectura y Visión Estratégica
+- **Backend:** Java 17, Spring Boot 3
+    - Sólido enfoque en principios SOLID, Clean Architecture (Robert C. Martin), patrones de diseño (inyección dependencias, DTOs, adaptadores), y uso funcional donde es apropiado.
+    - Capas claras: **Domain**, **Application**, **Adapters** (Web), **Infrastructure** (JPA/SQLite).
+    - Persistencia con **SQLite** usando JPA/Hibernate (archivo `animalxgym.db`).
+    - Gestión de dependencias vía Maven (`pom.xml`).
+    - Pruebas unitarias: JUnit 5, MockMvc, Mockito.
+    - Documentación de endpoints y estructura en este archivo.
+    
+## 🖥️ Cómo ejecutar el backend
 
-El sistema está diseñado siguiendo los principios de **Clean Architecture** para asegurar un bajo acoplamiento, alta cohesión y máxima testabilidad.
+1. Requisitos: Java 17+, Maven instalado.
+2. En terminal, desde la raíz del repo:
+   ```bash
+   mvn spring-boot:run
+   ```
+   El backend estará disponible en: [http://localhost:8080](http://localhost:8080)
+   
+3. El archivo de configuración principal está en `src/main/resources/application.properties`:
+   ```properties
+   spring.datasource.url=jdbc:sqlite:animalxgym.db
+   spring.datasource.driver-class-name=org.sqlite.JDBC
+   spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+   spring.jpa.show-sql=true
+   spring.jpa.hibernate.ddl-auto=update
+   ```
 
-- **Frontend (React)**: Una Single Page Application (SPA) responsable de la interfaz de usuario. Es liviana y se comunica con el backend a través de una API REST.
-- **Backend (Java/Spring Boot)**: Proporciona la API REST para la lógica de negocio y la persistencia de datos.
-  - **Capas**: Domain, Application, Adapters, Infrastructure.
-  - **Persistencia**: Utiliza **SQLite**, una base de datos embebida en un archivo (`animalx-gym.db`), lo que simplifica enormemente la configuración y el despliegue.
-  - **Principios**: Se aplican los principios SOLID, patrones de diseño y un enfoque funcional donde es apropiado para un código limpio y mantenible.
 
-## 🚀 Stack Tecnológico
+## 📦 API Endpoints principales
 
-- **Backend**:
-  - Java 17
-  - Spring Boot 3
-  - Spring Data JPA
-  - Maven
-  - SQLite
-- **Frontend**:
-  - React 19 (cargado vía CDN)
-  - TypeScript
-  - Tailwind CSS
+- **GET /members**
+    - Retorna todos los usuarios registrados en la base de datos (JSON).
 
----
+- **POST /members/upload**
+    - Permite la carga masiva de usuarios desde un archivo Excel (`.xlsx`), con formato:
+      | Id | Nombre | Correo | Teléfono | Género | Edad | Fecha de nacimiento | DNI | Estado de cuota | Dia a pagar la cuota | Tipo de pago | Cuota |
+      |----|--------|--------|----------|--------|------|---------------------|-----|-----------------|---------------------|--------------|-------|
+    - El campo `file` debe ser del tipo form-data (archivo) al enviar desde Postman o el frontend.
+    - El backend actualizará usuarios existentes por Id o creará nuevos según corresponda. El resultado indica filas creadas, actualizadas y errores.
 
-## 💻 Cómo Ejecutar el Proyecto Completo
+## 🗃️ Dependencias destacadas del backend (pom.xml)
+- Spring Boot Starter Web, Data JPA
+- SQLite JDBC
+- Hibernate Community Dialects (dialecto SQLite)
+- Apache POI (procesamiento de Excel)
+- Spring Boot Starter Test, JUnit, Mockito
 
-Para ejecutar la aplicación, necesitas tener ambos, el backend y el frontend, corriendo simultáneamente.
+## 💾 Modelo de datos principal (`GymMember`)
+```java
+class GymMember {
+    private Long id;
+    private String nombre;
+    private String correo;
+    private String telefono;
+    private String genero;
+    private Integer edad;
+    private String fechaNacimiento;
+    private String dni;
+    private String estadoCuota;
+    private Integer diaPagarCuota;
+    private String tipoPago;
+    private String cuota;
+    // getters/setters
+}
+```
 
-### 1. Requisitos Previos
+## 📝 Flujo de Carga de Usuarios
 
-- **JDK 17** (o superior) para el backend.
-- **Maven** para gestionar las dependencias y construir el backend.
-- Un navegador web moderno para el frontend.
-- Un editor de código como Visual Studio Code o IntelliJ IDEA.
+1. El usuario accede al frontend o usa Postman para cargar el Excel.
+2. El backend procesa cada fila:
+    - Si existe un Id, actualiza el usuario; si no, lo crea.
+    - Responde con resultado y errores encontrados.
+3. Consulta de usuarios con GET.
 
-### 2. Ejecutar el Backend (Java)
+## ☑️ Pruebas automatizadas
+- Unitarias para los servicios core y controladores (ver `/src/test/java/...`).
 
-1.  Abre una terminal en la raíz del proyecto.
-2.  Navega a la carpeta que contiene el archivo `pom.xml`.
-3.  Ejecuta el siguiente comando para iniciar el servidor de Spring Boot:
-    ```bash
-    ./mvnw spring-boot:run
-    ```
-    (Si estás en Windows, usa `mvnw.cmd spring-boot:run`)
+## 🧩 Notas de arquitectura
+- Clean Architecture: separación clara de dominio, servicio de aplicación, acceso a BBDD y adaptadores (controllers REST).
+- Código idiomático y comentado para fácil extensión.
+- Preparado para despliegue cloud o embebido.
 
-El backend estará corriendo en `http://localhost:8080`. La base de datos `animalx-gym.db` se creará automáticamente.
+## 🚀 Despliegue
+Puede ser desplegado en cualquier hosting que soporte Java/Spring Boot. Para bases de datos persistentes, puedes migrar fácilmente de SQLite a PostgreSQL solo cambiando el driver y la URL en el properties.
 
-### 3. Ejecutar el Frontend (React)
+## 🗂️ Información adicional/importante
+- La base de datos (`animalxgym.db`) está persistida en disco local.
+- El mismo endpoint de carga puede usarse varias veces: actualiza por Id o inserta nuevos automáticamente.
 
-1.  No se necesita `npm install` ya que las dependencias se cargan vía CDN.
-2.  Abre el archivo `index.html` en tu navegador. Puedes usar una extensión como **Live Server** en VS Code para una mejor experiencia de desarrollo.
-
-¡Listo! La aplicación se conectará automáticamente al backend y podrás empezar a gestionar los miembros del gimnasio.
-
----
-
-## 📦 API Endpoints
-
-Todos los endpoints están bajo el prefijo `/api/v1`.
-
-- `GET /members`: Retorna una lista de todos los miembros.
-- `POST /members/sync`: Sincroniza (crea o actualiza) una lista de miembros enviados en el cuerpo de la solicitud.
+¡Para cualquier duda de integración, consulta o extensión, revisa los tests o contacta al desarrollador! 
