@@ -34,4 +34,8 @@ public class JpaGymMemberRepositoryAdapter implements GymMemberRepository {
                 .map(MemberEntityMapper::toDomain)
                 .collect(Collectors.toList());
     }
+    @Override
+    public void deleteAll() {
+        jpaRepository.deleteAll();
+    }
 }

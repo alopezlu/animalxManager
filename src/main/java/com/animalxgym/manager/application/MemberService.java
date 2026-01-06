@@ -23,4 +23,7 @@ public class MemberService {
     public List<GymMember> getAllMembers() {
         return repository.findAll();
     }
+    public void deleteAllMembers() {
+        repository.deleteAll();
+    }
 }

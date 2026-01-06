@@ -13,9 +13,9 @@ public class GymMemberEntity {
     private String genero;
     private Integer edad;
     private String fechaNacimiento;
-    private String dni;
+    private Long dni;
     private String estadoCuota;
-    private Integer diaPagarCuota;
+    private String diaPagarCuota;
     private String tipoPago;
     private String cuota;
 
@@ -33,12 +33,12 @@ public class GymMemberEntity {
     public void setEdad(Integer edad) { this.edad = edad; }
     public String getFechaNacimiento() { return fechaNacimiento; }
     public void setFechaNacimiento(String fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
-    public String getDni() { return dni; }
-    public void setDni(String dni) { this.dni = dni; }
+    public Long getDni() { return dni; }
+    public void setDni(Long dni) { this.dni = dni; }
     public String getEstadoCuota() { return estadoCuota; }
     public void setEstadoCuota(String estadoCuota) { this.estadoCuota = estadoCuota; }
-    public Integer getDiaPagarCuota() { return diaPagarCuota; }
-    public void setDiaPagarCuota(Integer diaPagarCuota) { this.diaPagarCuota = diaPagarCuota; }
+    public String getDiaPagarCuota() { return diaPagarCuota; }
+    public void setDiaPagarCuota(String diaPagarCuota) { this.diaPagarCuota = diaPagarCuota; }
     public String getTipoPago() { return tipoPago; }
     public void setTipoPago(String tipoPago) { this.tipoPago = tipoPago; }
     public String getCuota() { return cuota; }

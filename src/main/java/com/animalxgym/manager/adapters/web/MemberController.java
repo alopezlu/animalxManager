@@ -24,4 +24,11 @@ public class MemberController {
         String resultado = excelUploadService.processExcel(file);
         return org.springframework.http.ResponseEntity.ok(resultado);
     }
+
+    // ENDPOINT TEMPORAL para limpiar todos los miembros (ÚSALO SOLO PARA TESTEO)
+    @org.springframework.web.bind.annotation.DeleteMapping("/clear")
+    public org.springframework.http.ResponseEntity<Void> clearAllMembers() {
+        memberService.deleteAllMembers();
+        return org.springframework.http.ResponseEntity.noContent().build();
+    }
 }

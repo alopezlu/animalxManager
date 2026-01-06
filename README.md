@@ -41,6 +41,11 @@
     - El campo `file` debe ser del tipo form-data (archivo) al enviar desde Postman o el frontend.
     - El backend actualizará usuarios existentes por Id o creará nuevos según corresponda. El resultado indica filas creadas, actualizadas y errores.
 
+- **DELETE /members/clear** (**ENDPOINT TEMPORAL**)
+    - Elimina todos los usuarios de la base de datos. Útil para pruebas y recargas de Excel. Usar solo en desarrollo/test.
+    - No recibe parámetros ni body. Responde con HTTP 204.
+
+
 ## 🗃️ Dependencias destacadas del backend (pom.xml)
 - Spring Boot Starter Web, Data JPA
 - SQLite JDBC
@@ -54,13 +59,13 @@ class GymMember {
     private Long id;
     private String nombre;
     private String correo;
-    private String telefono;
+    private Long telefono;
     private String genero;
     private Integer edad;
     private String fechaNacimiento;
-    private String dni;
+    private Long dni;
     private String estadoCuota;
-    private Integer diaPagarCuota;
+    private String diaPagarCuota;
     private String tipoPago;
     private String cuota;
     // getters/setters
@@ -71,7 +76,7 @@ class GymMember {
 
 1. El usuario accede al frontend o usa Postman para cargar el Excel.
 2. El backend procesa cada fila:
-    - Si existe un Id, actualiza el usuario; si no, lo crea.
+    - Si existe un Id, actualiza el usuario (toda la info); si no, lo crea.
     - Responde con resultado y errores encontrados.
 3. Consulta de usuarios con GET.
 
@@ -89,5 +94,6 @@ Puede ser desplegado en cualquier hosting que soporte Java/Spring Boot. Para bas
 ## 🗂️ Información adicional/importante
 - La base de datos (`animalxgym.db`) está persistida en disco local.
 - El mismo endpoint de carga puede usarse varias veces: actualiza por Id o inserta nuevos automáticamente.
+- El endpoint temporal `/members/clear` te ayuda a dejar la BD limpia para nuevas importaciones en pruebas.
 
 ¡Para cualquier duda de integración, consulta o extensión, revisa los tests o contacta al desarrollador! 
